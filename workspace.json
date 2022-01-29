@@ -1,0 +1,8 @@
+{
+  "version": 2,
+  "projects": {
+    "api": "apps/api",
+    "pw-places": "apps/pw-places",
+    "pw-places-e2e": "apps/pw-places-e2e"
+  }
+}
