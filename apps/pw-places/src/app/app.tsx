@@ -44,8 +44,6 @@ export function App() {
     }
   }, [placeId, dispatch]);
 
-  console.log(placeId);
-
   return (
     <>
       <GlobalStyle />
