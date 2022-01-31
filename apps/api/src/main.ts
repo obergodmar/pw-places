@@ -2,7 +2,7 @@ import * as express from 'express';
 import * as debug from 'debug';
 import * as cors from 'cors';
 
-// import * as fs from 'fs';
+import * as fs from 'fs';
 import * as expressWinston from 'express-winston';
 import * as http from 'http';
 import * as https from 'https';
@@ -11,10 +11,16 @@ import { CommonRoutesConfig, ROUTES } from './app/routes';
 
 const { SERVER_PORT, HOSTNAME, NODE_ENV } = process.env;
 
-const options = {
-  // key: fs.readFileSync('key.pem'),
-  // cert: fs.readFileSync('cert.pem'),
-};
+let options = {};
+
+try {
+  options = {
+    key: fs.readFileSync('key.pem'),
+    cert: fs.readFileSync('cert.pem'),
+  };
+} catch (e) {
+  console.error(e);
+}
 
 const app = express();
 
