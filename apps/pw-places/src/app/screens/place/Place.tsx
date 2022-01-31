@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { placeSelector } from '../../store/selectors';
 import { useGetPlaceQuery } from '../../store/services';
 
-import { Pannellum } from 'pannellum-react';
+import { Pannellum } from '../../../external';
 
 export function Place() {
   const { name, id } = useSelector(placeSelector);
@@ -22,8 +22,15 @@ export function Place() {
           image={`${ASSETS}/places/${id}/${Array.isArray(data) && data[0]}`}
           autoLoad
           vaov={90}
+          maxYaw={360}
+          hfov={120}
+          minHfov={50}
+          maxHfov={120}
+          minPitch={-45}
+          maxPitch={45}
           showZoomCtrl={false}
           showControls={false}
+          disableKeyboardCtrl
           onLoad={() => {
             console.log('panorama loaded');
           }}
