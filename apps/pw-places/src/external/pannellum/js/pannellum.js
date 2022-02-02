@@ -72,7 +72,7 @@ window.pannellum = (function (window, document, undefined) {
       orientationOnByDefault: false,
       hotSpotDebug: false,
       backgroundColor: [0, 0, 0],
-      avoidShowingBackground: false,
+      avoidShowingBackground: true,
       animationTimingFunction: timingFunction,
       draggable: true,
       disableKeyboardCtrl: false,
@@ -131,13 +131,9 @@ window.pannellum = (function (window, document, undefined) {
     dragFix.className = 'pnlm-dragfix';
     uiContainer.appendChild(dragFix);
 
-    // Display about information on right click
-    var aboutMsg = document.createElement('span');
-    aboutMsg.className = 'pnlm-about-msg';
-    aboutMsg.innerHTML =
-      '<a href="https://pannellum.org/" target="_blank">Pannellum</a>';
-    uiContainer.appendChild(aboutMsg);
-    dragFix.addEventListener('contextmenu', aboutMessage);
+    dragFix.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+    });
 
     // Create info display
     var infoDisplay = {};
@@ -699,28 +695,6 @@ window.pannellum = (function (window, document, undefined) {
         error = false;
         fireEvent('errorcleared');
       }
-    }
-
-    /**
-     * Displays about message.
-     * @private
-     * @param {MouseEvent} event - Right click location
-     */
-    function aboutMessage(event) {
-      var pos = mousePosition(event);
-      aboutMsg.style.left = pos.x + 'px';
-      aboutMsg.style.top = pos.y + 'px';
-      clearTimeout(aboutMessage.t1);
-      clearTimeout(aboutMessage.t2);
-      aboutMsg.style.display = 'block';
-      aboutMsg.style.opacity = 1;
-      aboutMessage.t1 = setTimeout(function () {
-        aboutMsg.style.opacity = 0;
-      }, 2000);
-      aboutMessage.t2 = setTimeout(function () {
-        aboutMsg.style.display = 'none';
-      }, 2500);
-      event.preventDefault();
     }
 
     /**

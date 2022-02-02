@@ -5,16 +5,39 @@ import { placeSelector } from '../../store/selectors';
 import { useGetPlaceQuery } from '../../store/services';
 
 import { Pannellum } from '../../../external';
+import { useCallback, useEffect, useRef } from 'react';
 
 export function Place() {
+  const ref = useRef<HTMLDivElement>(null);
+
   const { name, id } = useSelector(placeSelector);
 
   const { data, isLoading } = useGetPlaceQuery(id);
 
   console.log(name);
 
+  const handleResize = useCallback(() => {
+    if (!ref.current) {
+      return;
+    }
+
+    const { width, height } = ref.current.getBoundingClientRect();
+
+    console.log(width, height);
+  }, []);
+
+  useEffect(() => {
+    handleResize();
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [handleResize]);
+
   return (
-    <PlaceStyledWrapper>
+    <PlaceStyledWrapper ref={ref}>
       {!isLoading && (
         <Pannellum
           width="100%"
@@ -22,14 +45,11 @@ export function Place() {
           image={`${ASSETS}/places/${id}/${Array.isArray(data) && data[0]}`}
           autoLoad
           vaov={90}
-          maxYaw={360}
-          hfov={120}
-          minHfov={50}
-          maxHfov={120}
           minPitch={-45}
           maxPitch={45}
           showZoomCtrl={false}
           showControls={false}
+          autoRotate={-3}
           disableKeyboardCtrl
           onLoad={() => {
             console.log('panorama loaded');
