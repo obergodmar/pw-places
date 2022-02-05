@@ -11,6 +11,7 @@ stages:
 build_application:
   stage: build
   script:
+    - export $FRONTEND_ENV
     - npm install -g nx
     - npm install
     - npm run build
