@@ -11,10 +11,9 @@ stages:
 build_application:
   stage: build
   script:
-    - export $FRONTEND_ENV
     - npm install -g nx
     - npm install
-    - npm run build
+    - nx build api --prod && $FRONTEND_ENV nx build pw-places --prod
   artifacts:
     paths:
       - dist
