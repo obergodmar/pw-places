@@ -13,7 +13,7 @@ build_application:
   script:
     - npm install -g nx
     - npm install
-    - nx build api --prod && $FRONTEND_ENV nx build pw-places --prod
+    - nx build api --prod && env $FRONTEND_ENV nx build pw-places --prod
   artifacts:
     paths:
       - dist
