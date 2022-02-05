@@ -1,0 +1,45 @@
+image: node:12.22.3
+
+cache:
+  paths:
+    - node_modules/
+
+stages:
+  - build
+  - deploy
+
+build_application:
+  stage: build
+  script:
+    - npm install -g nx
+    - npm install
+    - npm run build
+  artifacts:
+    paths:
+      - dist
+    expire_in: 1 day
+  only:
+    - master
+
+deploy_application:
+  stage: deploy
+  image: phusion/baseimage:master
+  before_script:
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    - mkdir -p ~/.ssh
+    - eval $(ssh-agent -s)
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+    - echo "$PRIVATE_KEY" > ~/.ssh/id_rsa
+    - chmod 0600 ~/.ssh/id_rsa
+    - ssh-add ~/.ssh/id_rsa
+  script:
+    # FRONTEND
+    - ssh -p 1024 $FRONTEND "$FRONTEND_CLEAR"
+    - scp -P 1024 -r dist/apps/pw-places/* $FRONTEND_DESTINATION
+
+    # BACKEND
+    - ssh $BACKEND "$BACKEND_CLEAR"
+    - scp -r dist/apps/api/* $BACKEND_DESTINATION
+    - ssh $BACKEND "$BACKEND_RESTART"
+  only:
+    - master
