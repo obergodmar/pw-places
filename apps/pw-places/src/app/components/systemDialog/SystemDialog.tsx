@@ -1,5 +1,5 @@
 import {
-  SystemDialogStyledBorders,
+  DialogStyledBorders,
   SystemDialogStyledContainer,
   SystemDialogStyledText,
 } from './styles/SystemDialogStyled';
@@ -8,7 +8,7 @@ import { PropsWithChildren } from 'react';
 export function SystemDialog({ children }: PropsWithChildren<unknown>) {
   return (
     <SystemDialogStyledContainer>
-      <SystemDialogStyledBorders />
+      <DialogStyledBorders />
       <SystemDialogStyledText>{children}</SystemDialogStyledText>
     </SystemDialogStyledContainer>
   );

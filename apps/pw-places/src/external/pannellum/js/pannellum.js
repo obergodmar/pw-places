@@ -68,7 +68,7 @@ window.pannellum = (function (window, document, undefined) {
       mouseZoom: true,
       showZoomCtrl: true,
       autoLoad: false,
-      showControls: true,
+      showControls: false,
       orientationOnByDefault: false,
       hotSpotDebug: false,
       backgroundColor: [0, 0, 0],
@@ -135,57 +135,13 @@ window.pannellum = (function (window, document, undefined) {
       e.preventDefault();
     });
 
-    // Create info display
-    var infoDisplay = {};
-
-    // Hot spot debug indicator
-    var hotSpotDebugIndicator = document.createElement('div');
-    hotSpotDebugIndicator.className =
-      'pnlm-sprite pnlm-hot-spot-debug-indicator';
-    uiContainer.appendChild(hotSpotDebugIndicator);
-
-    // Panorama info
-    infoDisplay.container = document.createElement('div');
-    infoDisplay.container.className = 'pnlm-panorama-info';
-    infoDisplay.title = document.createElement('div');
-    infoDisplay.title.className = 'pnlm-title-box';
-    infoDisplay.container.appendChild(infoDisplay.title);
-    infoDisplay.author = document.createElement('div');
-    infoDisplay.author.className = 'pnlm-author-box';
-    infoDisplay.container.appendChild(infoDisplay.author);
-    uiContainer.appendChild(infoDisplay.container);
-
-    // Load box
-    infoDisplay.load = {};
-    infoDisplay.load.box = document.createElement('div');
-    infoDisplay.load.box.className = 'pnlm-load-box';
-    infoDisplay.load.boxp = document.createElement('p');
-    infoDisplay.load.box.appendChild(infoDisplay.load.boxp);
-    infoDisplay.load.lbox = document.createElement('div');
-    infoDisplay.load.lbox.className = 'pnlm-lbox';
-    infoDisplay.load.lbox.innerHTML = '<div class="pnlm-loading"></div>';
-    infoDisplay.load.box.appendChild(infoDisplay.load.lbox);
-    infoDisplay.load.lbar = document.createElement('div');
-    infoDisplay.load.lbar.className = 'pnlm-lbar';
-    infoDisplay.load.lbarFill = document.createElement('div');
-    infoDisplay.load.lbarFill.className = 'pnlm-lbar-fill';
-    infoDisplay.load.lbar.appendChild(infoDisplay.load.lbarFill);
-    infoDisplay.load.box.appendChild(infoDisplay.load.lbar);
-    infoDisplay.load.msg = document.createElement('p');
-    infoDisplay.load.msg.className = 'pnlm-lmsg';
-    infoDisplay.load.box.appendChild(infoDisplay.load.msg);
-    uiContainer.appendChild(infoDisplay.load.box);
-
-    // Error message
-    infoDisplay.errorMsg = document.createElement('div');
-    infoDisplay.errorMsg.className = 'pnlm-error-msg pnlm-info-box';
-    uiContainer.appendChild(infoDisplay.errorMsg);
+    const indicator = document.querySelector('#indicator');
 
     // Create controls
     var controls = {};
     controls.container = document.createElement('div');
     controls.container.className = 'pnlm-controls-container';
-    uiContainer.appendChild(controls.container);
+    // uiContainer.appendChild(controls.container);
 
     // Load button
     controls.load = document.createElement('div');
@@ -194,17 +150,17 @@ window.pannellum = (function (window, document, undefined) {
       processOptions();
       load();
     });
-    uiContainer.appendChild(controls.load);
+    // uiContainer.appendChild(controls.load);
 
     // Zoom controls
     controls.zoom = document.createElement('div');
     controls.zoom.className = 'pnlm-zoom-controls pnlm-controls';
     controls.zoomIn = document.createElement('div');
-    controls.zoomIn.className = 'pnlm-zoom-in pnlm-sprite pnlm-control';
+    controls.zoomIn.className = 'pnlm-zoom-in pnlm-control';
     controls.zoomIn.addEventListener('click', zoomIn);
     controls.zoom.appendChild(controls.zoomIn);
     controls.zoomOut = document.createElement('div');
-    controls.zoomOut.className = 'pnlm-zoom-out pnlm-sprite pnlm-control';
+    controls.zoomOut.className = 'pnlm-zoom-out pnlm-control';
     controls.zoomOut.addEventListener('click', zoomOut);
     controls.zoom.appendChild(controls.zoomOut);
     controls.container.appendChild(controls.zoom);
@@ -213,7 +169,7 @@ window.pannellum = (function (window, document, undefined) {
     controls.fullscreen = document.createElement('div');
     controls.fullscreen.addEventListener('click', toggleFullscreen);
     controls.fullscreen.className =
-      'pnlm-fullscreen-toggle-button pnlm-sprite pnlm-fullscreen-toggle-button-inactive pnlm-controls pnlm-control';
+      'pnlm-fullscreen-toggle-button pnlm-fullscreen-toggle-button-inactive pnlm-controls pnlm-control';
     if (
       document.fullscreenEnabled ||
       document.mozFullScreenEnabled ||
@@ -242,7 +198,7 @@ window.pannellum = (function (window, document, undefined) {
       e.stopPropagation();
     });
     controls.orientation.className =
-      'pnlm-orientation-button pnlm-orientation-button-inactive pnlm-sprite pnlm-controls pnlm-control';
+      'pnlm-orientation-button pnlm-orientation-button-inactive pnlm-controls pnlm-control';
     var orientationSupport,
       startOrientationIfSupported = false;
 
@@ -268,7 +224,7 @@ window.pannellum = (function (window, document, undefined) {
     // Compass
     var compass = document.createElement('div');
     compass.className = 'pnlm-compass pnlm-controls pnlm-control';
-    uiContainer.appendChild(compass);
+    // uiContainer.appendChild(compass);
 
     // Load and process configuration
     if (initialConfig.firstScene) {
@@ -308,8 +264,6 @@ window.pannellum = (function (window, document, undefined) {
           panoImage.push(new Image());
           panoImage[i].crossOrigin = config.crossOrigin;
         }
-        infoDisplay.load.lbox.style.display = 'block';
-        infoDisplay.load.lbar.style.display = 'none';
       } else if (config.type == 'multires') {
         var c = JSON.parse(JSON.stringify(config.multiRes)); // Deep copy
         // Avoid "undefined" in path, check (optional) multiRes.basePath, too
@@ -406,13 +360,13 @@ window.pannellum = (function (window, document, undefined) {
             }
             var img = this.response;
             parseGPanoXMP(img);
-            infoDisplay.load.msg.innerHTML = '';
           };
           xhr.onprogress = function (e) {
             if (e.lengthComputable) {
               // Display progress
               var percent = (e.loaded / e.total) * 100;
-              infoDisplay.load.lbarFill.style.width = percent + '%';
+              indicator.style.backgroundColor = '#5da5bb';
+              indicator.style.width = percent + '%';
               var unit, numerator, denominator;
               if (e.total > 1e6) {
                 unit = 'MB';
@@ -427,12 +381,6 @@ window.pannellum = (function (window, document, undefined) {
                 numerator = e.loaded;
                 denominator = e.total;
               }
-              infoDisplay.load.msg.innerHTML =
-                numerator + ' / ' + denominator + ' ' + unit;
-            } else {
-              // Display loading spinner
-              infoDisplay.load.lbox.style.display = 'block';
-              infoDisplay.load.lbar.style.display = 'none';
             }
           };
           try {
@@ -675,10 +623,11 @@ window.pannellum = (function (window, document, undefined) {
       if (errorMsg === undefined) {
         errorMsg = config.strings.genericWebGLError;
       }
-      infoDisplay.errorMsg.innerHTML = '<p>' + errorMsg + '</p>';
+      console.error(errorMsg);
+
       controls.load.style.display = 'none';
-      infoDisplay.load.box.style.display = 'none';
-      infoDisplay.errorMsg.style.display = 'table';
+      indicator.style.backgroundColor = '#b44f48';
+      indicator.style.width = '100%';
       error = true;
       renderContainer.style.display = 'none';
       fireEvent('error', errorMsg);
@@ -690,8 +639,7 @@ window.pannellum = (function (window, document, undefined) {
      */
     function clearError() {
       if (error) {
-        infoDisplay.load.box.style.display = 'none';
-        infoDisplay.errorMsg.style.display = 'none';
+        indicator.style.width = '0';
         error = false;
         fireEvent('errorcleared');
       }
@@ -1899,7 +1847,6 @@ window.pannellum = (function (window, document, undefined) {
       createHotSpots();
 
       // Hide loading display
-      infoDisplay.load.box.style.display = 'none';
       if (preview !== undefined) {
         renderContainer.removeChild(preview);
         preview = undefined;
@@ -1926,8 +1873,7 @@ window.pannellum = (function (window, document, undefined) {
       if (hs.cssClass) {
         div.className += ' ' + hs.cssClass;
       } else {
-        div.className +=
-          ' pnlm-hotspot pnlm-sprite pnlm-' + escapeHTML(hs.type);
+        div.className += ' pnlm-hotspot pnlm-' + escapeHTML(hs.type);
       }
 
       var span = document.createElement('span');
@@ -2248,38 +2194,13 @@ window.pannellum = (function (window, document, undefined) {
         }
       }
 
-      // Reset title / author display
-      if (!config.hasOwnProperty('title')) {
-        infoDisplay.title.innerHTML = '';
-      }
-      if (!config.hasOwnProperty('author')) {
-        infoDisplay.author.innerHTML = '';
-      }
-      if (!config.hasOwnProperty('title') && !config.hasOwnProperty('author')) {
-        infoDisplay.container.style.display = 'none';
-      }
-
       // Fill in load button label and loading box text
       controls.load.innerHTML = '<p>' + config.strings.loadButtonLabel + '</p>';
-      infoDisplay.load.boxp.innerHTML = config.strings.loadingLabel;
 
       // Process other options
       for (var key in config) {
         if (config.hasOwnProperty(key)) {
           switch (key) {
-            case 'title':
-              infoDisplay.title.innerHTML = escapeHTML(config[key]);
-              infoDisplay.container.style.display = 'inline';
-              break;
-
-            case 'author':
-              infoDisplay.author.innerHTML = config.strings.bylineLabel.replace(
-                '%s',
-                escapeHTML(config[key])
-              );
-              infoDisplay.container.style.display = 'inline';
-              break;
-
             case 'fallback':
               var link = document.createElement('a');
               link.href = sanitizeURL(config[key]);
@@ -2290,8 +2211,6 @@ window.pannellum = (function (window, document, undefined) {
               message.textContent = 'Your browser does not support WebGL.';
               message.appendChild(document.createElement('br'));
               message.appendChild(link);
-              infoDisplay.errorMsg.innerHTML = ''; // Removes all children nodes
-              infoDisplay.errorMsg.appendChild(message);
               break;
 
             case 'hfov':
@@ -2300,8 +2219,6 @@ window.pannellum = (function (window, document, undefined) {
 
             case 'autoLoad':
               if (config[key] === true && renderer === undefined) {
-                // Show loading box
-                infoDisplay.load.box.style.display = 'inline';
                 // Hide load button
                 controls.load.style.display = 'none';
                 // Initialize
@@ -2333,14 +2250,6 @@ window.pannellum = (function (window, document, undefined) {
               } else {
                 // Hide fullscreen control
                 controls.fullscreen.style.display = 'none';
-              }
-              break;
-
-            case 'hotSpotDebug':
-              if (config[key]) {
-                hotSpotDebugIndicator.style.display = 'block';
-              } else {
-                hotSpotDebugIndicator.style.display = 'none';
               }
               break;
 
@@ -2545,7 +2454,6 @@ window.pannellum = (function (window, document, undefined) {
       loaded = false;
 
       controls.load.style.display = 'none';
-      infoDisplay.load.box.style.display = 'inline';
       init();
     }
 

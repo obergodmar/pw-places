@@ -1,14 +1,27 @@
-import { PlaceStyledWrapper } from './styles';
+import {
+  PlaceLoadingIndicator,
+  PlaceLoadingIndicatorContainer,
+  PlaceLoadingIndicatorSVG,
+  PlaceStyledWrapper,
+} from './styles';
 import { ASSETS } from '../../constants';
 import { useSelector } from 'react-redux';
 import { placeSelector } from '../../store/selectors';
 import { useGetPlaceQuery } from '../../store/services';
 
 import { Pannellum } from '../../../external';
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 export function Place() {
-  const ref = useRef<HTMLDivElement>(null);
+  const ref = useRef<SVGPathElement>(null);
+  const [indicatorStyles, setIndicatorStyles] = useState({
+    width: 0,
+    height: 0,
+    top: 0,
+    left: 0,
+  });
+
+  const [isIndicatorShown, setIndicatorShown] = useState(true);
 
   const { name, id } = useSelector(placeSelector);
 
@@ -21,9 +34,9 @@ export function Place() {
       return;
     }
 
-    const { width, height } = ref.current.getBoundingClientRect();
+    const { width, height, left, top } = ref.current.getBoundingClientRect();
 
-    console.log(width, height);
+    setIndicatorStyles({ width, height, left, top });
   }, []);
 
   useEffect(() => {
@@ -37,7 +50,7 @@ export function Place() {
   }, [handleResize]);
 
   return (
-    <PlaceStyledWrapper ref={ref}>
+    <PlaceStyledWrapper>
       {!isLoading && (
         <Pannellum
           width="100%"
@@ -53,8 +66,20 @@ export function Place() {
           disableKeyboardCtrl
           onLoad={() => {
             console.log('panorama loaded');
+            setIndicatorShown(false);
           }}
         />
+      )}
+
+      {isIndicatorShown && (
+        <>
+          <PlaceLoadingIndicatorSVG>
+            <path ref={ref} d="M149 955H1152V969H149V955Z" />
+          </PlaceLoadingIndicatorSVG>
+          <PlaceLoadingIndicatorContainer {...indicatorStyles}>
+            <PlaceLoadingIndicator />
+          </PlaceLoadingIndicatorContainer>
+        </>
       )}
     </PlaceStyledWrapper>
   );

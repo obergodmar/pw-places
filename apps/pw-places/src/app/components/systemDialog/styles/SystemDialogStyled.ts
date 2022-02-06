@@ -1,6 +1,6 @@
-import styled, { centeredContainerStyled } from '../../../styles';
+import styled, { centeredContainerStyled, css } from '../../../styles';
 
-export const SystemDialogStyledBorders = styled.div`
+export const DialogStyledBorders = styled.div`
   position: absolute;
   width: 100%;
   height: 100%;
@@ -32,10 +32,7 @@ export const SystemDialogStyledBorders = styled.div`
   }
 `;
 
-export const SystemDialogStyledContainer = styled.div`
-  position: relative;
-  width: 398px;
-  height: 68px;
+export const dialogContainerStyled = css`
   border: 1px solid #2c1c0a;
 
   &:before,
@@ -60,7 +57,14 @@ export const SystemDialogStyledContainer = styled.div`
     border-top: 1px solid #76644a;
     border-bottom: 1px solid #76644a;
   }
+`;
 
+export const SystemDialogStyledContainer = styled.div`
+  position: relative;
+  width: 398px;
+  height: 68px;
+
+  ${dialogContainerStyled};
   ${centeredContainerStyled};
 `;
 
