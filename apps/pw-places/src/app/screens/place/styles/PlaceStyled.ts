@@ -1,12 +1,13 @@
 import styled, { defaultTransition, wrapperStyled } from '../../../styles';
-import { loaders } from '../../../../assets';
 
-export const PlaceStyledWrapper = styled.div`
+interface IPlaceStyledWrapper {
+  url: string;
+}
+
+export const PlaceStyledWrapper = styled.div<IPlaceStyledWrapper>`
   ${wrapperStyled};
 
-  background-image: url('${loaders[
-    Math.floor(Math.random() * loaders.length)
-  ]}');
+  background-image: ${({ url }) => `url("${url}")`};
 
   background-position: center;
   background-size: contain;

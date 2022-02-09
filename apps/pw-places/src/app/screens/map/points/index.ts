@@ -6,3 +6,6 @@ export * from './LedyanojPoselok';
 export * from './DerevnyaLavin';
 export * from './RokovojGorod';
 export * from './SevernyjGorod';
+export * from './GorodMechej';
+export * from './TajnayaDerevnya';
+export * from './DerevnyaRybakov';

@@ -5,14 +5,17 @@ import {
   PlaceStyledWrapper,
 } from './styles';
 import { ASSETS } from '../../constants';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { placeSelector } from '../../store/selectors';
 import { useGetPlaceQuery } from '../../store/services';
 
 import { Pannellum } from '../../../external';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { setAssetsReady } from '../../store/reducers';
+import { loaders } from '../../../assets';
 
 export function Place() {
+  const dispatch = useDispatch();
   const ref = useRef<SVGPathElement>(null);
   const [indicatorStyles, setIndicatorStyles] = useState({
     width: 0,
@@ -50,7 +53,9 @@ export function Place() {
   }, [handleResize]);
 
   return (
-    <PlaceStyledWrapper>
+    <PlaceStyledWrapper
+      url={loaders[Math.floor(Math.random() * loaders.length)]}
+    >
       {!isLoading && (
         <Pannellum
           width="100%"
@@ -67,6 +72,7 @@ export function Place() {
           onLoad={() => {
             console.log('panorama loaded');
             setIndicatorShown(false);
+            dispatch(setAssetsReady());
           }}
         />
       )}

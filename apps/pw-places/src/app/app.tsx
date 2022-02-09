@@ -8,6 +8,7 @@ import { Provider, useDispatch, useSelector } from 'react-redux';
 import { store } from './store';
 import { SCREENS_ENUM, setScreen } from './store/reducers';
 import { placeSelector, screenSelector } from './store/selectors';
+import { Ui } from './components';
 
 const { LOADING, MAP, PLACE } = SCREENS_ENUM;
 
@@ -20,7 +21,7 @@ const screen = {
 export function App() {
   const dispatch = useDispatch();
   const { value: currentScreen } = useSelector(screenSelector);
-  const { id: placeId } = useSelector(placeSelector);
+  const { assetsReady } = useSelector(placeSelector);
 
   useEffect(() => {
     applyCursor('body', `${ASSETS}/normal.ani`).then(() => {
@@ -38,16 +39,12 @@ export function App() {
     };
   }, [dispatch]);
 
-  useEffect(() => {
-    if (placeId) {
-      dispatch(setScreen(PLACE));
-    }
-  }, [placeId, dispatch]);
-
   return (
     <>
       <GlobalStyle />
       {screen[currentScreen]}
+
+      {currentScreen === PLACE && assetsReady && <Ui />}
     </>
   );
 }

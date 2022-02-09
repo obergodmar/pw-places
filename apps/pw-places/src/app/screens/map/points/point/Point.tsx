@@ -3,11 +3,12 @@ import {
   MouseEvent,
   PropsWithChildren,
   useCallback,
+  useEffect,
   useRef,
   useState,
 } from 'react';
-import { useDispatch } from 'react-redux';
-import { setPlace } from '../../../../store/reducers';
+import { batch, useDispatch } from 'react-redux';
+import { SCREENS_ENUM, setPlace, setScreen } from '../../../../store/reducers';
 import { PointStyledWrapper, PointTooltip } from './styles';
 import { DialogStyledBorders } from '../../../../components/systemDialog/styles/SystemDialogStyled';
 
@@ -45,7 +46,19 @@ export function Point({ id, name, children }: PropsWithChildren<IPointProps>) {
     clearTimeout(hoverTimer.current);
   }, []);
 
-  console.log(hover, tooltipStyles);
+  useEffect(
+    () => () => {
+      clearTimeout(hoverTimer.current);
+    },
+    []
+  );
+
+  const handleClick = () => {
+    batch(() => {
+      dispatch(setPlace({ name, id }));
+      dispatch(setScreen(SCREENS_ENUM.PLACE));
+    });
+  };
 
   return (
     <>
@@ -55,7 +68,7 @@ export function Point({ id, name, children }: PropsWithChildren<IPointProps>) {
         className="point"
         id={id}
         name={name}
-        onClick={() => dispatch(setPlace({ name, id }))}
+        onClick={handleClick}
       >
         {children}
       </PointStyledWrapper>
