@@ -79,7 +79,9 @@ const analyticsMiddleware: Middleware = (api) => (dispatch) => (action) => {
     parameters = `:${payload?.name}`;
   }
 
-  trackEvent(`${type}${parameters}`);
+  if (!type.includes('__rtkq')) {
+    trackEvent(`${type}${parameters}`);
+  }
 
   dispatch(action);
 };
