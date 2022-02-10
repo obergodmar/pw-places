@@ -20,10 +20,12 @@ import { AnyAction } from 'redux';
 import { batch } from 'react-redux';
 
 import Plausible from 'plausible-tracker';
+import { API } from '../constants';
 
 const { trackEvent } = Plausible({
   domain: 'pw-places.obergodmar.ru',
-  apiHost: 'http://94.26.231.106:8010',
+  apiHost: `${API}/analytics`,
+  trackLocalhost: true,
 });
 
 enum ItemsActionsTypes {
@@ -70,14 +72,14 @@ const analyticsMiddleware: Middleware = (api) => (dispatch) => (action) => {
   let parameters = '';
 
   if (type === 'screen/setScreen') {
-    parameters = payload;
+    parameters = `:${payload}`;
   }
 
   if (type === 'place/setPlace') {
-    parameters = payload?.name;
+    parameters = `:${payload?.name}`;
   }
 
-  trackEvent(`${type}:${parameters}`);
+  trackEvent(`${type}${parameters}`);
 
   dispatch(action);
 };
