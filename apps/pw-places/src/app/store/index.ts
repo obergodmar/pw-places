@@ -19,6 +19,13 @@ import {
 import { AnyAction } from 'redux';
 import { batch } from 'react-redux';
 
+import Plausible from 'plausible-tracker';
+
+const { trackEvent } = Plausible({
+  domain: 'pw-places.obergodmar.ru',
+  apiHost: 'http://94.26.231.106:8010',
+});
+
 enum ItemsActionsTypes {
   APPLY_ITEM_ACTION = 'APPLY_ITEM_ACTION',
 }
@@ -33,7 +40,7 @@ const ItemsAction: { [key: string]: () => AnyAction } = {
   runaPerenosa: () => setScreen(SCREENS_ENUM.MAP),
 };
 
-const rtkQueryErrorLogger: Middleware = (api) => (next) => (action) => {
+const rtkQueryErrorLogger: Middleware = (api) => (dispatch) => (action) => {
   if (isRejectedWithValue(action)) {
     console.warn('We got a rejected action!', {
       title: 'Async error!',
@@ -41,7 +48,7 @@ const rtkQueryErrorLogger: Middleware = (api) => (next) => (action) => {
     });
   }
 
-  return next(action);
+  return dispatch(action);
 };
 
 const itemsActionsMiddleware: Middleware = (api) => (dispatch) => (action) => {
@@ -57,6 +64,24 @@ const itemsActionsMiddleware: Middleware = (api) => (dispatch) => (action) => {
   });
 };
 
+const analyticsMiddleware: Middleware = (api) => (dispatch) => (action) => {
+  const { type, payload } = action;
+
+  let parameters = '';
+
+  if (type === 'screen/setScreen') {
+    parameters = payload;
+  }
+
+  if (type === 'place/setPlace') {
+    parameters = payload?.name;
+  }
+
+  trackEvent(`${type}:${parameters}`);
+
+  dispatch(action);
+};
+
 export const store = configureStore({
   reducer: {
     screen: screenReducer,
@@ -69,7 +94,8 @@ export const store = configureStore({
       placesApi.middleware,
       logger,
       rtkQueryErrorLogger,
-      itemsActionsMiddleware
+      itemsActionsMiddleware,
+      analyticsMiddleware
     ),
   devTools: process.env['NODE_ENV'] !== 'production',
 });
