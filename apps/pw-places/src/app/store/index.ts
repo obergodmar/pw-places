@@ -22,11 +22,13 @@ import { batch } from 'react-redux';
 import Plausible from 'plausible-tracker';
 import { API } from '../constants';
 
-const { trackEvent } = Plausible({
+const { enableAutoPageviews, trackEvent } = Plausible({
   domain: 'pw-places.obergodmar.ru',
   apiHost: `${API}/analytics`,
   trackLocalhost: false,
 });
+
+enableAutoPageviews();
 
 enum ItemsActionsTypes {
   APPLY_ITEM_ACTION = 'APPLY_ITEM_ACTION',
