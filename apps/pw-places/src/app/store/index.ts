@@ -25,7 +25,7 @@ import { API } from '../constants';
 const { trackEvent } = Plausible({
   domain: 'pw-places.obergodmar.ru',
   apiHost: `${API}/analytics`,
-  trackLocalhost: true,
+  trackLocalhost: false,
 });
 
 enum ItemsActionsTypes {
