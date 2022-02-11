@@ -75,7 +75,7 @@ const analyticsMiddleware: Middleware = (api) => (dispatch) => (action) => {
     trackEvent(type, { props: { screen: payload } });
   }
 
-  if (type === 'place/setPlace') {
+  if (type === 'screen/setPlace') {
     trackEvent(type, { props: { place: payload?.name } });
   }
 
