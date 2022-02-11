@@ -71,18 +71,12 @@ const itemsActionsMiddleware: Middleware = (api) => (dispatch) => (action) => {
 const analyticsMiddleware: Middleware = (api) => (dispatch) => (action) => {
   const { type, payload } = action;
 
-  let parameters = '';
-
   if (type === 'screen/setScreen') {
-    parameters = `:${payload}`;
+    trackEvent(type, { props: { screen: payload } });
   }
 
   if (type === 'place/setPlace') {
-    parameters = `:${payload?.name}`;
-  }
-
-  if (!type.includes('__rtkq')) {
-    trackEvent(`${type}${parameters}`);
+    trackEvent(type, { props: { place: payload?.name } });
   }
 
   dispatch(action);
