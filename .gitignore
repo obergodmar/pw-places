@@ -39,3 +39,28 @@ testem.log
 Thumbs.db
 
 .env.*
+.env
+!.env.example
+.devenv/
+.direnv/
+.next/
+.vercel/
+*.tsbuildinfo
+playwright-report/
+test-results/
+public/vendor/
+src/app/game-cursor.generated.css
+
+# Local investigations, agent state and diagnostic artifacts
+/docs/
+/.agents/
+/.codex/
+/screenshots/
+*.log
+.envrc.local
+
+# Credentials and private certificate bundles
+*.key
+*.pem
+*.p12
+*.pfx

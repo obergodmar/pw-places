@@ -1,94 +1,48 @@
+# PW Places
 
+Карта воспоминаний о Perfect World. Next.js App Router, React, TypeScript, Pannellum. Карта и 10 исходных панорам хранятся локально в `public/assets`; отдельный backend не нужен.
 
-# PwPlaces
+## Разработка
 
-This project was generated using [Nx](https://nx.dev).
+Внешние инструменты закреплены в Nix/devenv; префикс команд — `pw-`.
 
-<p style="text-align: center;"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="450"></p>
+```sh
+direnv allow
+devenv shell -- pnpm install --frozen-lockfile --ignore-scripts
+devenv shell -- pw-dev
+```
 
-🔎 **Smart, Fast and Extensible Build System**
+В активированном direnv shell можно вызывать `pw-dev` напрямую. Node 24 и pnpm 12.3.4 предоставляет Nix; не устанавливайте глобальные CLI. `pnpm-lock.yaml` содержит только новые зависимости, старый npm lockfile удалён без установки.
 
-## Adding capabilities to your workspace
+```sh
+devenv shell -- pw-format
+devenv shell -- pw-check
+devenv shell -- pw-build
+devenv shell -- pw-test-e2e
+devenv shell -- pw-audit
+```
 
-Nx supports many plugins which add capabilities for developing different types of applications and different tools.
+Тесты браузера используют Chromium из Nix. Не запускайте `playwright install`. Сначала нужна production-сборка. Сборка и dev копируют готовый Pannellum с лицензией из закреплённого npm-пакета в `public/vendor`; установочные скрипты зависимостей выключены.
 
-These capabilities include generating applications, libraries, etc as well as the devtools to test, and build projects as well.
+## Структура
 
-Below are our core plugins:
+- `src/app` — серверная карта, страницы `/places/[id]`, обработка ошибок и `/api/places/[id]`.
+- `src/data/places.json` — названия, координаты на карте 1440×1080, изображения и необязательная музыка.
+- `src/components/panorama.tsx` — клиентский WebGL-просмотр с очисткой ресурсов, ошибками загрузки и управлением звуком.
+- `public/assets` — исходная карта, панорамы, игровой шрифт, панель предметов, руна и загрузочные экраны.
 
-- [React](https://reactjs.org)
-  - `npm install --save-dev @nrwl/react`
-- Web (no framework frontends)
-  - `npm install --save-dev @nrwl/web`
-- [Angular](https://angular.io)
-  - `npm install --save-dev @nrwl/angular`
-- [Nest](https://nestjs.com)
-  - `npm install --save-dev @nrwl/nest`
-- [Express](https://expressjs.com)
-  - `npm install --save-dev @nrwl/express`
-- [Node](https://nodejs.org)
-  - `npm install --save-dev @nrwl/node`
+Данные страницы читаются на сервере; API доступен для внешних клиентов и возвращает объект места (это новый контракт, не прежний массив имён файлов). Неизвестный ID даёт 404. Произвольные пути с диска и внешний прокси отсутствуют.
 
-There are also many [community plugins](https://nx.dev/community) you could add.
+Музыкальных файлов в архиве нет; аудиоплеер не отображается. Поле `audio` зарезервировано в каталоге, но воспроизведение не подключено. Чтобы восстановить Лагерь Водопада, добавьте панораму и заполните `images`. Исторические панорамы использовали вертикальный угол 90°.
 
-## Generate an application
+Интерфейс сохраняет исходный вид: карта на весь экран с игровыми маркерами и названиями при наведении; в панораме — девять ячеек предметов, руна в девятой возвращает на карту. Заголовков, списка мест и постоянных подсказок поверх сцены нет.
 
-Run `nx g @nrwl/react:app my-app` to generate an application.
+Оригинальный анимированный курсор восстановлен из `public/assets/normal.ani`: 12 кадров 32×32, hotspot 0×0, цикл 2 секунды. При dev/build `scripts/game-cursor.mjs` преобразует исходные BGRA-кадры в PNG и генерирует CSS. Новых зависимостей и клиентского декодера нет. Курсор наследуется ссылками, кнопками и слоем перетаскивания Pannellum. На touch-экранах он не включается; при `prefers-reduced-motion` используется первый неподвижный кадр. Нативный указатель остаётся запасным вариантом браузера. Генерируемый `src/app/game-cursor.generated.css` не нужно редактировать или коммитить.
 
-> You can use any of the plugins above to generate applications as well.
+## Vercel
 
-When using Nx, you can create multiple applications and libraries in the same workspace.
+Импортируйте репозиторий с корневой директорией `.` и preset Next.js, Node 24.x. `vercel.json` задаёт frozen install и build. На Vercel Node/pnpm предоставляет платформа; Nix используется локально, версии согласованы с `engines` и `packageManager`. Environment variables для контента не нужны. Не задавайте старый `NX_BACKEND_ADDRESS`.
 
-## Generate a library
+В layout подключены Web Analytics и Speed Insights; в `src/instrumentation.ts` — Vercel OpenTelemetry (`pw-places`). Включите Analytics и Speed Insights в настройках Vercel-проекта. Фактический приём событий проверяется после публикации; локальная сборка этого не подтверждает. Дополнительный OTel collector не задан: на Vercel используется интеграция платформы.
 
-Run `nx g @nrwl/react:lib my-lib` to generate a library.
-
-> You can also use any of the plugins above to generate libraries as well.
-
-Libraries are shareable across libraries and applications. They can be imported from `@pw-places/mylib`.
-
-## Development server
-
-Run `nx serve my-app` for a dev server. Navigate to http://localhost:4200/. The app will automatically reload if you change any of the source files.
-
-## Code scaffolding
-
-Run `nx g @nrwl/react:component my-component --project=my-app` to generate a new component.
-
-## Build
-
-Run `nx build my-app` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
-
-## Running unit tests
-
-Run `nx test my-app` to execute the unit tests via [Jest](https://jestjs.io).
-
-Run `nx affected:test` to execute the unit tests affected by a change.
-
-## Running end-to-end tests
-
-Run `ng e2e my-app` to execute the end-to-end tests via [Cypress](https://www.cypress.io).
-
-Run `nx affected:e2e` to execute the end-to-end tests affected by a change.
-
-## Understand your workspace
-
-Run `nx graph` to see a diagram of the dependencies of your projects.
-
-## Further help
-
-Visit the [Nx Documentation](https://nx.dev) to learn more.
-
-
-
-## ☁ Nx Cloud
-
-### Distributed Computation Caching & Distributed Task Execution
-
-<p style="text-align: center;"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-cloud-card.png"></p>
-
-Nx Cloud pairs with Nx in order to enable you to build and test code more rapidly, by up to 10 times. Even teams that are new to Nx can connect to Nx Cloud and start saving time instantly.
-
-Teams using Nx gain the advantage of building full-stack applications with their preferred framework alongside Nx’s advanced code generation and project dependency graph, plus a unified experience for both frontend and backend developers.
-
-Visit [Nx Cloud](https://nx.app/) to learn more.
+Перед публичным запуском повторите аудит зависимостей и проверьте доступные обновления безопасности Next.js.

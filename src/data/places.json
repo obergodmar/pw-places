@@ -1,0 +1,90 @@
+[
+  {
+    "id": "derevnyaLavin",
+    "name": "Деревня лавин",
+    "x": 649,
+    "y": 135,
+    "images": ["/assets/places/derevnyaLavin/derevnyaLavin.jpg"],
+    "audio": null
+  },
+  {
+    "id": "derevnyaRybakov",
+    "name": "Деревня рыбаков",
+    "x": 948,
+    "y": 270,
+    "images": ["/assets/places/derevnyaRybakov/derevnyaRybakov.jpg"],
+    "audio": null
+  },
+  {
+    "id": "gorodMechej",
+    "name": "Город Мечей",
+    "x": 766,
+    "y": 230,
+    "images": ["/assets/places/gorodMechej/gorodMechej.jpg"],
+    "audio": null
+  },
+  {
+    "id": "krepostKompas",
+    "name": "Крепость-компас",
+    "x": 879,
+    "y": 229,
+    "images": ["/assets/places/krepostKompas/krepostKompas.jpg"],
+    "audio": null
+  },
+  {
+    "id": "lagerVodopada",
+    "name": "Лагерь Водопада",
+    "x": 656,
+    "y": 277,
+    "images": [],
+    "audio": null
+  },
+  {
+    "id": "ledyanojPoselok",
+    "name": "Ледяной поселок",
+    "x": 576,
+    "y": 134,
+    "images": ["/assets/places/ledyanojPoselok/ledyanojPoselok.jpg"],
+    "audio": null
+  },
+  {
+    "id": "lesopilnya",
+    "name": "Лесопильня",
+    "x": 814,
+    "y": 140,
+    "images": ["/assets/places/lesopilnya/Lesopilnya.jpg"],
+    "audio": null
+  },
+  {
+    "id": "rokovojGorod",
+    "name": "Роковой город",
+    "x": 973,
+    "y": 139,
+    "images": ["/assets/places/rokovojGorod/rokovojGorod.jpg"],
+    "audio": null
+  },
+  {
+    "id": "severnyjGorod",
+    "name": "Северный город",
+    "x": 483,
+    "y": 211,
+    "images": ["/assets/places/severnyjGorod/severnyjGorod.jpg"],
+    "audio": null
+  },
+  {
+    "id": "snezhnayaDerevnya",
+    "name": "Снежная деревня",
+    "x": 476,
+    "y": 146,
+    "images": ["/assets/places/snezhnayaDerevnya/snezhnayaDerevnya-5.jpg"],
+    "audio": null
+  },
+  {
+    "id": "tajnayaDerevnya",
+    "name": "Тайная деревня",
+    "x": 813,
+    "y": 234,
+    "images": ["/assets/places/tajnayaDerevnya/tajnayaDerevnya.jpg"],
+    "audio": null
+  }
+]

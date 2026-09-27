@@ -1,0 +1,13 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "ignorePatterns": [
+    "src/app/game-cursor.generated.css",
+    "public/**",
+    "pnpm-lock.yaml",
+    "devenv.lock",
+    ".devenv/**",
+    ".direnv/**",
+    ".next/**",
+    "next-env.d.ts"
+  ]
+}
