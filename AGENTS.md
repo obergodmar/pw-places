@@ -10,3 +10,8 @@
 - Do not deploy or push unless requested. Do not invent missing panoramas or music.
 - Preserve the original game interface and assets. Do not add headings, explanatory copy, footers, lists or new controls to the map/panorama without an explicit request. The ninth-slot transfer rune returns to the map.
 - Keep investigations, audit reports and private working notes under the ignored `docs/` directory. Do not force-add them or link to them from public documentation. Keep local paths, credentials and private infrastructure details out of tracked files.
+
+- Shared tooling workflows come from the Agent Workflows Codex plugin declared in `.agents/plugins/marketplace.json`; project decisions remain authoritative.
+- Preserve existing tool versions/style. Every maintained project has EditorConfig and appropriate format, lint, and type checks; new JS/TS projects default to 2 spaces, Oxfmt, Oxlint, and TypeScript.
+- Apply the plugin's relevant workflow when changing tooling, quality gates, or deployment. Reuse accepted standards; discuss architecture, hosting, databases, and persistence changes with the user.
+- For personal-host operations, use only the infrastructure checkout explicitly selected by the user for that operation. Never infer it from folder names or a conventional home path.

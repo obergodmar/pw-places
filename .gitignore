@@ -53,8 +53,12 @@ src/app/game-cursor.generated.css
 
 # Local investigations, agent state and diagnostic artifacts
 /docs/
-/.agents/
-/.codex/
+/.agents/*
+!/.agents/plugins/
+/.agents/plugins/*
+!/.agents/plugins/marketplace.json
+/.codex/*
+!/.codex/config.toml
 /screenshots/
 *.log
 .envrc.local

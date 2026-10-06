@@ -24,6 +24,19 @@ devenv shell -- pw-audit
 
 Тесты браузера используют Chromium из Nix. Не запускайте `playwright install`. Сначала нужна production-сборка. Сборка и dev копируют готовый Pannellum с лицензией из закреплённого npm-пакета в `public/vendor`; установочные скрипты зависимостей выключены.
 
+## Agent workflows
+
+The Agent Workflows Codex plugin is declared in `.agents/plugins/marketplace.json`, pinned to a reviewed Git commit, and enabled in `.codex/config.toml`. Project instructions remain in `AGENTS.md`.
+
+From this trusted project, use Codex's plugin manager:
+
+```sh
+codex plugin marketplace add .
+codex plugin add agent-workflows@agent-workflows
+```
+
+The desktop app can also install it from the Agent Workflows source in the Plugins Directory. Start a new Codex session after installation. Application dependencies, CI, and deployment do not require Codex or the plugin. To update, review a new source commit, change the catalog's `source.sha`, reinstall/refresh through Codex, and commit the catalog change. Keep personal agent state ignored.
+
 ## Структура
 
 - `src/app` — серверная карта, страницы `/places/[id]`, обработка ошибок и `/api/places/[id]`.
